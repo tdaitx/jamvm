@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010, 2011, 2012, 2013, 2014
+ * Copyright (C) 2010, 2011, 2012, 2013, 2014, 2015, 2016
  * Robert Lougher <rob@jamvm.org.uk>.
  *
  * This file is part of JamVM.
@@ -34,6 +34,7 @@
 #include "reflect.h"
 #include "natives.h"
 #include "openjdk.h"
+#include "properties.h"
 #include "trace.h"
 
 int classlibInitialiseNatives() {
@@ -470,6 +471,16 @@ uintptr_t *storeFence(Class *class, MethodBlock *mb, uintptr_t *ostack) {
     return ostack;
 }
 
+uintptr_t *isBigEndian0(Class *clazz, MethodBlock *mb, uintptr_t *ostack) {
+    *ostack++ = IS_BIG_ENDIAN;
+    return ostack;
+}
+
+uintptr_t *unalignedAccess0(Class *clazz, MethodBlock *mb, uintptr_t *ostack) {
+    *ostack++ = FALSE;
+    return ostack;
+}
+
 VMMethod sun_misc_unsafe[] = {
     {"registerNatives",        "()V", unsafeRegisterNatives},
     {"objectFieldOffset",      "(Ljava/lang/reflect/Field;)J",
@@ -569,6 +580,8 @@ VMMethod sun_misc_unsafe[] = {
     {"fullFence",              "()V", fullFence},
     {"loadFence",              "()V", loadFence},
     {"storeFence",             "()V", storeFence},
+    {"isBigEndian0",           "()Z", isBigEndian0},
+    {"unalignedAccess0",       "()Z", unalignedAccess0},
     {NULL,                     NULL, NULL}
 };
 
